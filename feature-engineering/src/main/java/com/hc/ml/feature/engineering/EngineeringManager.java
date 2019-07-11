@@ -5,6 +5,7 @@ import com.hc.ml.feature.engineering.exception.ObjectCannotBeSerializeException;
 import com.hc.ml.feature.engineering.utils.ClassScanner;
 
 
+import org.dmg.pmml.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,7 @@ public class EngineeringManager {
 
     private Map<String, EngineeringInfo> key2TrainInfo = new HashMap<>();
 
-    public EngineeringManager() throws InstantiationException, IllegalAccessException, ObjectCannotBeSerializeException {
+    public EngineeringManager() throws Exception {
         loadAll();
     }
 
@@ -91,8 +92,27 @@ public class EngineeringManager {
         TransferInfo info = new TransferInfo();
         info.setMethod(method);
         info.setObject(object);
-        info.setParameterTypes(paramUsefulAnnotations);
+        info.setParameterInfos(packageParameterInfos(paramUsefulAnnotations));
         return info;
+    }
+
+    private List<ParameterInfo> packageParameterInfos(Annotation[] paramUsefulAnnotations) {
+        List<ParameterInfo> infos = new ArrayList<>();
+        for (Annotation paramUsefulAnnotation : paramUsefulAnnotations) {
+
+            if(paramUsefulAnnotation.annotationType().equals(AllValue.class)){
+                infos.add(new ParameterInfo(ParameterType.ALL_VALUE,null));
+            }else if(paramUsefulAnnotation.annotationType().equals(ColumnValue.class)){
+                infos.add(new ParameterInfo(ParameterType.COLUMN,((ColumnValue)paramUsefulAnnotation).value()));
+            }else if(paramUsefulAnnotation.annotationType().equals(FieldValue.class)){
+                infos.add(new ParameterInfo(ParameterType.FIELD,((FieldValue)paramUsefulAnnotation).value()));
+            }else if(paramUsefulAnnotation.annotationType().equals(RowValue.class)){
+                infos.add(new ParameterInfo(ParameterType.ROW,null));
+            }else{
+                throw new RuntimeException("should not be here");
+            }
+        }
+        return infos;
     }
 
     private boolean isProcessingAnnotation(Annotation annotation) {
@@ -107,7 +127,7 @@ public class EngineeringManager {
     }
 
 
-    public EngineeringInfo getTransferInfo(String recommendKey){
+    public EngineeringInfo getEngineeringInfo(String recommendKey){
         return key2TrainInfo.get(recommendKey);
     }
 

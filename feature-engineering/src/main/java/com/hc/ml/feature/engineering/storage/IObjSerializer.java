@@ -11,6 +11,8 @@ import java.util.List;
  */
 
 public interface IObjSerializer {
+
     byte[] serialize(List list) throws IOException;
-    List<Object> unSerialize(byte[] bytes) throws UnsupportedEncodingException, ClassNotFoundException, IllegalAccessException, InstantiationException;
+
+    List<Object> unSerialize(byte[] bytes) throws Exception;
 }

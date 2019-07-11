@@ -1,7 +1,7 @@
 package com.hc.ml.feature.engineering;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * TransferInfo
@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 
 public class TransferInfo {
     private Method method;
-    private Annotation[] parameterTypes;
+    private List<ParameterInfo> parameterInfos;
     private Object object;
 
     public Method getMethod() {
@@ -23,12 +23,12 @@ public class TransferInfo {
         this.method = method;
     }
 
-    public Annotation[] getParameterTypes() {
-        return parameterTypes;
+    public List<ParameterInfo> getParameterInfos() {
+        return parameterInfos;
     }
 
-    public void setParameterTypes(Annotation[] parameterTypes) {
-        this.parameterTypes = parameterTypes;
+    public void setParameterInfos(List<ParameterInfo> parameterInfos) {
+        this.parameterInfos = parameterInfos;
     }
 
     public Object getObject() {
